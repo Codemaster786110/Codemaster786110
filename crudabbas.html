@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .btn-success {
+            margin-top: 1rem;
+            width: 100%;
+            margin-left: 18rem;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $("#datepicker").datepicker();
+        });
+    </script>
+</head>
+
+<body class="container">
+
+    <h1>demo form</h1>
+
+    <div class="row">
+
+        <div class="col-sm-6">Name:
+            <input type="text" class="form-control" id="name" placeholder="name" name="name">
+        </div>
+        <div class="col-sm-6">Roll no:
+            <input type="text" class="form-control" placeholder="roll no" id="roll_no" name="roll_no">
+        </div>
+        <div class="col-sm-6">DOB:
+            <input type="text" class="form-control" id="datepicker" placeholder="DOB" name="DOB">
+        </div>
+        <div class="col-sm-6">Email:
+            <input type="text" class="form-control" placeholder="email" id="email" name="email">
+        </div>
+        <div class="col-sm-6">
+
+            <button onclick="submit()" class="btn btn-success">submit</button>
+        </div>
+    </div>
+
+
+    <div class="container" style="margin-top: 2rem;">
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Roll no</th>
+                    <th>DOB</th>
+                    <th>Email</th>
+                    <th>action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+</body>
+<script>
+    $('body').on('click', '.btn-success', function () {
+        var name = $('[name="name"]').val();
+        var roll_no = $('[name="roll_no"]').val();
+        var DOB = $('[name="DOB"]').val();
+        var email = $('[name="email"]').val();
+        var rowcount = $('tbody tr').length;
+        var action = '<button class="btn btn-danger">delete</button><button class="btn  btn-primary">edit</button>'
+        // if (name == "") {
+
+        //     alert("fill name")
+        //     return false;
+        // }
+        // if (roll_no == "") {
+        //     alert("fill roll no")
+        //     return false;
+        // }
+ 
+
+        $("tbody").append('<tr data-name=' + name + ' data-roll_no=' + roll_no + ' data-DOB=' + DOB + ' data-email=' + email + '><td>' + (rowcount + 1) + '</td>' +
+            '<td>' + name + '</td>' +
+            '<td>' + roll_no + '</td>' +
+            '<td>' + DOB + '</td>' +
+            '<td>' + email + '</td>' +
+            '<td>' + action + '</td>' +
+            '</tr>');
+    });
+    $('body').on('click', '.btn-danger', function () {
+        $(this).closest('tr').remove();
+
+    });
+    $('body').on("click", ".btn-primary", function () {
+        let row = $(this).closest('tr');
+        var obj = {
+            name: row.attr('data-name'),
+            roll_no: row.attr('data-roll_no'),
+            DOB: row.attr('data-DOB'),
+            email: row.attr('data-email')
+        }
+
+        row.find("td:eq(1)").html('<input class="form-control" name="edit_name" value="' + obj.name + '">')
+        row.find("td:eq(2)").html('<input class="form-control" name="edit_roll_no" value="' + obj.roll_no + '">')
+        row.find("td:eq(3)").html('<input class="form-control" name="edit_DOB" value="' + obj.DOB + '">')
+        row.find("td:eq(4)").html('<input class="form-control" name="edit_email" value="' + obj.email + '">')
+
+        row.find("td:eq(5)").prepend('<button type="button" class="btn btn-warning btn-update savebtn">Save</button>');
+        $(this).hide();
+    });
+    $('body').on('click', '.savebtn', function () {
+        let row = $(this).parents('tr');
+        var obj = {
+            name: row.find('[name="edit_name"]').val(),
+            roll_no: row.find('[name="edit_roll_no"]').val(),
+            DOB: row.find('[name="edit_DOB"]').val(),
+            email: row.find('[name="edit_email"]').val()
+
+        }
+
+        row.find("td:eq(1)").html(obj.name);
+        row.find("td:eq(2)").html(obj.roll_no);
+        row.find("td:eq(3)").html(obj.DOB);
+        row.find("td:eq(4)").html(obj.email);
+
+        row.find('.editBtn').show();
+        row.find('.savebtn').remove();
+    });
+    if ($.trim($("#name, #roll_no, #DOB, #email").val()) === "") {
+
+
+    };
+
+    $(document).ready(function () {
+
+        $("#roll_no").keyup(function (e) {
+
+            if ($(this).val().match(/[^0-9]/g, '')) {
+                $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                $(this).val($(this).val().replace(/[^0-9]/g, ''));
+                console.log("=====")
+                errorflag = 1;
+            } else {
+                console.log("==tt===")
+            }
+        });
+
+        $("#roll_no").bind('paste', function (e) {
+            setTimeout(function () { $(this).keyup(); }, 30);
+        });
+    });
+    $("#name").keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z ]+$");
+        var strigChar = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(strigChar)) {
+            return true;
+        }
+        return false
+    });
+    function mailValidation(val) {
+    var expr = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+
+    if (!expr.test(val)) {
+        $('#email').text('Please enter valid email.');
+    }
+    else {
+        $('#email').hide();
+    }
+}
+   
+</script>
+
+</html>
